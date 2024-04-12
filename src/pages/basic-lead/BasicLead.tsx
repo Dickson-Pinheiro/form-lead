@@ -1,42 +1,71 @@
+import { FormEvent, useState } from "react"
+import { leadService } from "../../services/leadService"
+import { useNavigate } from "react-router-dom"
+
 export default function BasicLead() {
+  const [name, setname] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
+  const [phone, setPhone] = useState<string>('')
+  const { createOrUpdateLead } = leadService()
+  const [loading, setLoading] = useState<boolean>(false)
+  const navigate = useNavigate()
 
-    return (
-        <div className="p-4 flex justify-center items-center h-screen w-full">
-            <form className="max-w-[900px] w-fit h-fit flex flex-col justify-center">
-                <div className="space-y-12">
-                    <div className="border-b border-gray-900/10 pb-12">
-                        <h2 className="text-base font-semibold leading-7 text-gray-900">Acesse o material.</h2>
-                        <p className="mt-1 text-sm leading-6 text-gray-600">Descubra como fazer com que as marcas valorizem seu produto cultural.</p>
+  async function submitForm(e: FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      const res = await createOrUpdateLead({
+        name,
+        email,
+        telefone: phone
+      })
+      localStorage.setItem('id', res.id)
+      setLoading(false)
+      navigate('/course')
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
+    }
 
-                        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                            <div className="col-span-4">
-                                <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">Nome</label>
-                                <div className="mt-2">
-                                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                                        <input type="text" name="name" id="name" autoComplete="username" className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" required />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-span-4">
-                                <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">e-mail</label>
-                                <div className="mt-2">
-                                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+  }
 
-                                        <input type="text" name="email" id="email" autoComplete="username" className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" required />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-span-4">
-                                <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">Telefone</label>
-                                <div className="mt-2">
-                                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+  return (
+    <div className="p-4 flex justify-center items-center h-screen w-full">
+      <form className="max-w-[900px] w-fit h-fit flex flex-col justify-center" onSubmit={submitForm}>
+        <div className="space-y-12">
+          <div className="border-b border-gray-900/10 pb-12">
+            <h2 className="text-base font-semibold leading-7 text-gray-900">Acesse o material.</h2>
+            <p className="mt-1 text-sm leading-6 text-gray-600">Descubra como fazer com que as marcas valorizem seu produto cultural.</p>
 
-                                        <input type="text" name="telefone" id="telefone" autoComplete="username" className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" required />
-                                    </div>
-                                </div>
-                            </div>
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <div className="col-span-4">
+                <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">Nome</label>
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                    <input type="text" name="name" id="name" autoComplete="username" value={name} onChange={(e) => setname(e.target.value)} className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" required />
+                  </div>
+                </div>
+              </div>
+              <div className="col-span-4">
+                <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">e-mail</label>
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
 
-                            {/*<div className="col-span-full">
+                    <input type="text" name="email" id="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" required />
+                  </div>
+                </div>
+              </div>
+              <div className="col-span-4">
+                <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">Telefone</label>
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+
+                    <input type="text" name="telefone" id="telefone" autoComplete="username" value={phone} onChange={(e) => setPhone(e.target.value)} className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" required />
+                  </div>
+                </div>
+              </div>
+
+              {/*<div className="col-span-full">
                   <label htmlFor="about" className="block text-sm font-medium leading-6 text-gray-900">About</label>
                   <div className="mt-2">
                     <textarea id="about" name="about" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
@@ -44,7 +73,7 @@ export default function BasicLead() {
                   <p className="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about yourself.</p>
                 </div>*/}
 
-                            {/*<div className="col-span-full">
+              {/*<div className="col-span-full">
                   <label htmlFor="photo" className="block text-sm font-medium leading-6 text-gray-900">Photo</label>
                   <div className="mt-2 flex items-center gap-x-3">
                     <svg className="h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -54,7 +83,7 @@ export default function BasicLead() {
                   </div>
               </div>*/}
 
-                            {/*<div className="col-span-full">
+              {/*<div className="col-span-full">
                   <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 text-gray-900">Cover photo</label>
                   <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                     <div className="text-center">
@@ -72,14 +101,14 @@ export default function BasicLead() {
                     </div>
                   </div>
             </div>*/}
-                        </div>
-                    </div>
+            </div>
+          </div>
 
-                    {/*<div className="border-b border-gray-900/10 pb-12">
+          {/*<div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">Personal InhtmlFormation</h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">Use a permanent address where you can receive mail.</p>*/}
 
-                    {/*<div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          {/*<div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div className="sm:col-span-3">
                   <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">First name</label>
                   <div className="mt-2">
@@ -140,9 +169,9 @@ export default function BasicLead() {
                   </div>
                 </div>
               </div>*/}
-                    {/*</div>*/}
+          {/*</div>*/}
 
-                    {/*<div className="border-b border-gray-900/10 pb-12">
+          {/*<div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">Notifications</h2>
               <p className="mt-1 text-sm leading-6 text-gray-600">We'll always let you know about important changes, but you pick what else you want to hear about.</p>
   
@@ -199,12 +228,12 @@ export default function BasicLead() {
                 </fieldset>
               </div>
             </div>*/}
-                </div>
-                <div className="mt-6 flex items-center justify-start">
-                    <button type="submit" className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
-                </div>
-            </form>
         </div>
-    )
+        <div className="mt-6 flex items-center justify-start">
+          <button type="submit" disabled={loading} className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+        </div>
+      </form>
+    </div>
+  )
 }
 

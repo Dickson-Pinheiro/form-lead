@@ -1,8 +1,18 @@
 import styled from "styled-components"
 import barraInferior from '../../assets/barra-inferior.png'
 import rectangle from '../../assets/Rectangle.jpg'
+import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 export default function VideoPage(){
+    const navigate = useNavigate()
+    useEffect(() => {
+        const id = localStorage.getItem('id')
+        if(!id){ 
+            navigate('/')
+        }
+    }, [])
+
     return(
         <ContainerManifestoMaior id="consultores">
             <BarraInferior>
