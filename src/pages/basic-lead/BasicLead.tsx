@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react"
+import { FormEvent, useEffect, useState } from "react"
 import { leadService } from "../../services/leadService"
 import { useNavigate } from "react-router-dom"
 
@@ -9,6 +9,14 @@ export default function BasicLead() {
   const { createOrUpdateLead } = leadService()
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
+
+
+  useEffect(() =>  {
+    const id = localStorage.getItem('id')
+    if(id){
+      navigate('/course')
+    }
+  }, [])
 
   async function submitForm(e: FormEvent) {
     e.preventDefault()

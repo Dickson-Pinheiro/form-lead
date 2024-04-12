@@ -1,10 +1,10 @@
 import { useConnectionPb } from "./api"
 
 export interface CreateOrUpdateLeadProps {
-    name: string,
+    name?: string,
     apelido?: string,
-    email: string,
-    telefone: string,
+    email?: string,
+    telefone?: string,
     marketing_range?: number,
     cargo?: string,
     principal_renda?: string,
@@ -22,7 +22,7 @@ export function leadService() {
                 })
             }
 
-            return await conn.collection('lead').update(id)
+            return await conn.collection('lead').update(id, data)
 
         }
     }
